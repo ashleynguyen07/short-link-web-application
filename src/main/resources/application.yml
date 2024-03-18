@@ -1,0 +1,69 @@
+server:
+  port: 8080
+
+logging:
+  file:
+    path: /
+    name: short-link.log
+  level:
+    com:
+      example:
+        shortlinkapplication: debug
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /link-swagger-ui.html
+    operationsSorter: method
+
+spring:
+  datasource:
+    url: ${JDBC_DATABASE_URL:}
+    username: ${JDBC_DATABASE_USERNAME:}
+    password: ${JDBC_DATABASE_PASSWORD:}
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: ${OAUTH2_GOOGLE_CLIENT_ID:}
+            clientSecret: ${OAUTH2_GOOGLE_CLIENT_SECRET:}
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+          github:
+            clientId: ${OAUTH2_GITHUB_CLIENT_ID:}
+            clientSecret: ${OAUTH2_GITHUB_CLIENT_SECRET:}
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - user:email
+              - read:user
+
+app:
+  auth:
+    tokenSecret: ${APP_AUTH_TOKEN_SECRET:}
+    tokenExpiration: 864000000
+  cors:
+    allowedOrigins: http://localhost:3000, http://localhost:8080
+  oauth2:
+    authorizedRedirectUri:
+      - http://localhost:3000/api/redirect
+
+
+
+
+
+
