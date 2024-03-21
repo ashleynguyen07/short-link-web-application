@@ -1,0 +1,50 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:sqlserver://localhost:1433;databaseName=linkapplication;encrypt=true;trustServerCertificate=true
+    username: sa
+    password: someThingComplicated1234
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: 338791afa05f93
+    password: cc8eaa46b9a447
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 148552102427-f9ssttqui8ek06lqbeh10ics96t0vm75.apps.googleusercontent.com
+            clientSecret: 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
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+          github:
+            clientId: 3087ab164dc570a1c72e
+            clientSecret: e8e512354b45a78e35b3240a29f5d0ab31193ca9
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - user:email
+              - read:user
+
+app:
+  auth:
+    tokenSecret: 77baa86a5d41a865336dcda4859912ac600d7cd451dc959373e7bb63cf3ffb11
+    tokenExpiration: 864000000
+  cors:
+    allowedOrigins: http://localhost:3000, http://localhost:8080
+  oauth2:
+    authorizedRedirectUri:
+      - http://localhost:3000/oauth2/redirect
+
+
+
