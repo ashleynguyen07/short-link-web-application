@@ -10,7 +10,6 @@ logging:
       example:
         shortlinkapplication: debug
 
-
 springdoc:
   api-docs:
     path: /api-docs
