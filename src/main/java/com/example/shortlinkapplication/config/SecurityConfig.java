@@ -36,33 +36,9 @@ public class SecurityConfig {
   @Autowired
   @Lazy
   private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+
   @Autowired
   private UserRepository userRepository;
-
-  @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
-        .csrf(AbstractHttpConfigurer::disable)
-        .formLogin(AbstractHttpConfigurer::disable)
-        .sessionManagement(
-            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(requests -> requests
-            .requestMatchers("/auth/**", "/oauth2/**", "/signin", "/dashboard/**", "/public/**",
-                "/**", "/profile/**")
-            .permitAll()
-            .anyRequest().authenticated())
-        .oauth2Login(oauth -> oauth
-            .authorizationEndpoint(auth -> auth.baseUri("/oauth2/authorize")
-                .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository())
-            )
-            .redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))
-            .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
-            .successHandler(oAuth2AuthenticationSuccessHandler)
-            .failureHandler(oAuth2AuthenticationFailureHandler)
-        )
-        .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-    return http.build();
-  }
 
   @Bean
   public TokenAuthenticationFilter tokenAuthenticationFilter() {
@@ -84,6 +60,31 @@ public class SecurityConfig {
   @Bean
   public AuthenticationManager authenticationManager() {
     return new ProviderManager(Collections.singletonList(authenticationProvider()));
+  }
+
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(AbstractHttpConfigurer::disable)
+        .formLogin(AbstractHttpConfigurer::disable)
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(requests -> requests
+            .requestMatchers("/auth/**", "/oauth2/**", "/signin", "/dashboard/**", "/public/**",
+                "/**", "/profile/**").permitAll()
+            .anyRequest().authenticated())
+        .oauth2Login(oauth -> oauth
+            .authorizationEndpoint(auth -> auth.baseUri("/oauth2/authorize")
+                .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository())
+            )
+            .redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))
+            .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
+            .successHandler(oAuth2AuthenticationSuccessHandler)
+            .failureHandler(oAuth2AuthenticationFailureHandler)
+        )
+        .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+    return http.build();
   }
 
 
