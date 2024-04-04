@@ -22,17 +22,6 @@ CREATE TABLE [user_account] (
   token VARCHAR(255)
 );
 
-CREATE TABLE url (
-  id INT PRIMARY KEY,
-  short_url VARCHAR(50) ,
-  long_url VARCHAR(MAX),
-  create_date DATETIME,
-  expire_date DATETIME,
-  projectID INT,
-  total_click_url INT,
-  FOREIGN KEY (projectID) REFERENCES [project](projectID)
-);
-
 CREATE TABLE project (
   projectID INT IDENTITY(1,1) PRIMARY KEY,
   project_name VARCHAR(20),
@@ -43,6 +32,17 @@ CREATE TABLE project (
   userID INT,
   [domain] VARCHAR(10),
   FOREIGN KEY (userID) REFERENCES user_account(userID)
+);
+
+CREATE TABLE url (
+  id INT PRIMARY KEY,
+  short_url VARCHAR(50) ,
+  long_url VARCHAR(MAX),
+  create_date DATETIME,
+  expire_date DATETIME,
+  projectID INT,
+  total_click_url INT,
+  FOREIGN KEY (projectID) REFERENCES [project](projectID)
 );
 
 CREATE TABLE locations (
