@@ -22,7 +22,6 @@ public class LoginService {
   private final EmailValidator emailValidator;
   private final ConfirmationTokenService confirmationTokenService;
   private final UserRepository userRepository;
-  private final ConfirmationTokenRepository confirmationTokenRepository;
   private final EmailSender emailSender;
 
   @Autowired
@@ -33,7 +32,6 @@ public class LoginService {
     this.emailValidator = emailValidator;
     this.confirmationTokenService = confirmationTokenService;
     this.userRepository = userRepository;
-    this.confirmationTokenRepository = confirmationTokenRepository;
     this.emailSender = emailSender;
   }
 
@@ -69,17 +67,6 @@ public class LoginService {
         user);
     confirmationTokenService.saveConfirmationToken(confirmationToken);
     return loginResponse;
-  }
-
-  public boolean verify(String token) {
-    ConfirmationToken confirmationToken = confirmationTokenRepository.findByToken(token);
-    if (confirmationToken == null) {
-      return false;
-    } else {
-      confirmationToken.setToken(token);
-      confirmationTokenRepository.save(confirmationToken);
-      return true;
-    }
   }
 
   // validate confirm token - update confirmed at column
