@@ -35,7 +35,7 @@ CREATE TABLE project (
 );
 
 CREATE TABLE url (
-  id INT PRIMARY KEY,
+  id INT IDENTITY(1,1) PRIMARY KEY,
   short_url VARCHAR(50) ,
   long_url VARCHAR(MAX),
   create_date DATETIME,
