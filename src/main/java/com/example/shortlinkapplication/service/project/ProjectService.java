@@ -9,8 +9,14 @@ import com.example.shortlinkapplication.entity.User;
 import java.util.List;
 
 public interface ProjectService {
-    List<Project> getListProject(User userID);
-    Project createProject(CreateProjectRequest request, User userID);
-    Project updateProject(UpdateProjectRequest request, User userID);
-    List<Project> deleteProject(DeleteProjectRequest request, User ID);
+
+  List<Project> getListProject(User userID);
+
+  Project getProjectByProjectId(User userID, Project projectID);
+
+  Project createProject(CreateProjectRequest request, User userID);
+
+  Project updateProject(UpdateProjectRequest request, User userID);
+
+  List<Project> deleteProject(DeleteProjectRequest request, User id);
 }

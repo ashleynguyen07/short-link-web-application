@@ -10,6 +10,7 @@ import com.example.shortlinkapplication.repository.UserRepository;
 import com.example.shortlinkapplication.security.CurrentUser;
 import com.example.shortlinkapplication.security.UserPrincipal;
 import com.example.shortlinkapplication.service.project.ProjectServiceImpl;
+import io.swagger.v3.oas.annotations.Parameter;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -34,6 +35,18 @@ public class ProjectController {
   public List<Project> getListProject(@CurrentUser UserPrincipal userPrincipal) {
     User userID = getUser(userPrincipal);
     return projectService.getListProject(userID);
+  }
+
+  @GetMapping("/get-project-by-id")
+  public Project getProjectByProjectId(@CurrentUser UserPrincipal userPrincipal,
+      @Parameter Integer projectID) {
+    User userID = getUser(userPrincipal);
+    Optional<Project> optionalProject = projectRepository.findById(projectID);
+    if (optionalProject.isEmpty()) {
+      throw new IllegalArgumentException("Project not found");
+    }
+    Project project = optionalProject.get();
+    return projectService.getProjectByProjectId(userID, project);
   }
 
   @PostMapping("/create-project")

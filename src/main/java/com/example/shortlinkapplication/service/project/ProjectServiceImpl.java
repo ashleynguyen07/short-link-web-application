@@ -39,6 +39,30 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   /**
+   * get project by project id
+   *
+   * @return project object
+   */
+  @Override
+  public Project getProjectByProjectId(User userID, Project projectID) {
+    Optional<Project> optionalProject = projectRepository.findById(projectID.getProjectID());
+    logger.info("ProjectID: {}", projectID.getProjectID());
+    if (optionalProject.isEmpty()) {
+      throw new IllegalArgumentException("Project not found with ID: " + projectID.getProjectID());
+    } else {
+      Project project = optionalProject.get();
+      User findUserID = projectRepository.findUserIDByProjectID(project.getProjectID());
+      if (!userID.equals(findUserID)) {
+        logger.info("UserID: {}", userID);
+        logger.info("Find user id: {}", findUserID);
+        throw new IllegalArgumentException("Handler policy user update");
+      } else {
+        return project;
+      }
+    }
+  }
+
+  /**
    * create new project with userID
    *
    * @param request, userID
@@ -79,7 +103,6 @@ public class ProjectServiceImpl implements ProjectService {
       if (!userID.equals(findUserID)) {
         logger.info("UserID: {}", userID);
         logger.info("Find user id: {}", findUserID);
-        logger.error("Handler policy user update");
         throw new IllegalArgumentException("Handler policy user update");
       } else {
         project.setProjectName(request.getName());
@@ -94,7 +117,7 @@ public class ProjectServiceImpl implements ProjectService {
     throw new IllegalArgumentException("Project not found with id: " + request.getProjectID());
   }
 
- /**
+  /**
    * delete project from userID
    *
    * @param request, useID
