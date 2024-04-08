@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.ResourceAccessException;
 
 @Service
 @RequiredArgsConstructor
@@ -27,16 +26,15 @@ public class UserService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    User user = userRepository.findByEmail(username);
-    if (user == null) {
-      throw new UsernameNotFoundException("User not found");
-    }
-    return UserPrincipal.create(user);
+    return Optional.ofNullable(userRepository.findByEmail(username))
+        .map(UserPrincipal::create)
+        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
   }
 
   @Transactional
   public UserDetails loadUserById(Integer id) {
-    User user = userRepository.findById(id).orElseThrow(() -> new ResourceAccessException("User"));
+    User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User"
+        + " not found"));
     return UserPrincipal.create(user);
   }
 

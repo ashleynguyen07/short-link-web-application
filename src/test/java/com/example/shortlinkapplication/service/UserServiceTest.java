@@ -1,6 +1,8 @@
 package com.example.shortlinkapplication.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.times;
@@ -19,6 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -59,6 +62,19 @@ class UserServiceTest {
   }
 
   /**
+   * JUnit test loadUserByUsername method which username is non-exist
+   */
+  @Test
+  @DisplayName("loadUserByUsername which username is non-exist")
+  void givenNonExistUsername_whenLoadUserByUsername_thenThrowsException() {
+    String nonExistEmail = "belu772001@gmail.com";
+    given(userRepository.findByEmail(nonExistEmail)).willReturn(null);
+    assertThrows(UsernameNotFoundException.class, () -> {
+      userService.loadUserByUsername(nonExistEmail);
+    });
+  }
+
+  /**
    * JUnit test loadUserById method
    */
   @Test
@@ -68,6 +84,19 @@ class UserServiceTest {
     UserDetails userDetails = userService.loadUserById(user.getUserID());
     assertThat(userDetails).isNotNull();
     assertThat(userDetails.getUsername()).isEqualTo(user.getEmail());
+  }
+
+  /**
+   * JUnit test loadUserById method with non-exist user id
+   */
+  @Test
+  @DisplayName("loadUserById with non-exist userID")
+  void givenNonExistUserID_whenLoadUserById_thenReturnException() {
+    Integer id = 10;
+    given(userRepository.findById(id)).willReturn(Optional.empty());
+    assertThrows(UsernameNotFoundException.class, () -> {
+      userService.loadUserById(id);
+    });
   }
 
   /**
@@ -112,6 +141,26 @@ class UserServiceTest {
 
     assertThat(deleteProfileRequest.getVerify()).isEqualTo("confirm delete account");
     verify(userRepository, times(1)).deleteById(user.getUserID());
+  }
+
+  /**
+   * JUnit test deleteUserProfile method when verify string is incorrect
+   */
+  @Test
+  @DisplayName("deleteUserProfile() when verify string is incorrect")
+  void givenDeleteRequestWithIncorrectVerifyString_whenDeleteUserProfile_thenUserIsNotDeleted() {
+    DeleteProfileRequest request = new DeleteProfileRequest();
+    request.setVerify("incorrect verify string");
+
+    given(userRepository.findById(user.getUserID())).willReturn(Optional.ofNullable(user));
+
+    String result = userService.deleteUserProfile(request, user.getUserID());
+
+    // Xác minh deleteById không được gọi
+    verify(userRepository, times(0)).deleteById(user.getUserID());
+
+    // Kiểm tra xem kết quả có phải là null không
+    assertNull(result);
   }
 
   /**
