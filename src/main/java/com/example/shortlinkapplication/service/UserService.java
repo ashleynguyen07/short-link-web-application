@@ -6,8 +6,9 @@ import com.example.shortlinkapplication.entity.User;
 import com.example.shortlinkapplication.repository.UserRepository;
 import com.example.shortlinkapplication.security.UserPrincipal;
 import java.util.Optional;
-import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Data
+@Getter
+@Setter
 public class UserService implements UserDetailsService {
 
   private static final Logger logger = LoggerFactory.getLogger(UserService.class);
