@@ -76,7 +76,7 @@ class UserControllerTest {
     mockMvc.perform(MockMvcRequestBuilders.get("/user/me")
             .with(SecurityMockMvcRequestPostProcessors.user(userPrincipal)))
         .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.userID").value("1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.userID").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("nguyentramy.se@gmail.com"));
   }
 
@@ -104,7 +104,7 @@ class UserControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.userID").value("1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.userID").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("meme@gmail.com"));
   }
 
