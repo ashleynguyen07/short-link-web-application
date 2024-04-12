@@ -14,6 +14,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/dashboard")
 @AllArgsConstructor
+@Slf4j
 public class ProjectController {
 
   private final ProjectServiceImpl projectService;
@@ -34,20 +38,27 @@ public class ProjectController {
   @GetMapping("/get-project-list")
   public List<Project> getListProject(@CurrentUser UserPrincipal userPrincipal) {
     User userID = getUser(userPrincipal);
+    log.info("User: {}", userID);
     return projectService.getListProject(userID);
   }
 
   @GetMapping("/get-project-by-id")
-  public Project getProjectByProjectId(@CurrentUser UserPrincipal userPrincipal,
+  public ResponseEntity<?> getProjectByProjectId(@CurrentUser UserPrincipal userPrincipal,
       @Parameter Integer projectID) {
     User userID = getUser(userPrincipal);
     Optional<Project> optionalProject = projectRepository.findById(projectID);
     if (optionalProject.isEmpty()) {
-      throw new IllegalArgumentException("Project not found");
+      return new ResponseEntity<>("Project not found", HttpStatus.BAD_REQUEST);
     }
     Project project = optionalProject.get();
-    return projectService.getProjectByProjectId(userID, project);
+    try {
+      Project result = projectService.getProjectByProjectId(userID, project);
+      return new ResponseEntity<>(result, HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
+
 
   @PostMapping("/create-project")
   public Project createProject(@RequestBody CreateProjectRequest request,
@@ -75,6 +86,7 @@ public class ProjectController {
     Optional<User> userOptional = userRepository.findById(userID);
 
     if (userOptional.isPresent()) {
+      log.info("User found: {}", userOptional.get());
       return userOptional.get();
     }
     throw new IllegalArgumentException("User not found with id: " + userID);
