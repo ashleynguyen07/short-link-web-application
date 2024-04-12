@@ -1,5 +1,6 @@
 package com.example.shortlinkapplication.controller;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import com.example.shortlinkapplication.dto.project.CreateProjectRequest;
@@ -90,7 +91,40 @@ class ProjectControllerTest {
             .with(SecurityMockMvcRequestPostProcessors.user(userPrincipal)))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
+  }
 
+  /**
+   * JUnit test GET request - getListProject method which non-exist project then return exception
+   */
+  @Test
+  @DisplayName("getListProject() with non-exist project")
+  void givenNonExistProject_whenGetListProject_thenReturnException() throws Exception {
+    when(projectRepository.findById(project.getProjectID())).thenReturn(Optional.empty());
+
+    mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/get-project-by-id")
+            .with(SecurityMockMvcRequestPostProcessors.user(userPrincipal))
+            .with(SecurityMockMvcRequestPostProcessors.csrf())
+            .param("projectID", String.valueOf(project.getProjectID())))
+        .andExpect(MockMvcResultMatchers.status().isBadRequest())
+        .andExpect(MockMvcResultMatchers.content().string("Project not found"));
+  }
+
+  /**
+   * JUnit test GET request - getListProject method with catch exception
+   */
+  @Test
+  @DisplayName("getListProject() with catch exception")
+  void givenProject_whenGetListProject_thenCatchException() throws Exception {
+    when(projectRepository.findById(project.getProjectID())).thenReturn(Optional.of(project));
+    when(projectService.getProjectByProjectId(user, project)).thenThrow(
+        new RuntimeException("Unexpected error"));
+
+    mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/get-project-by-id")
+            .with(SecurityMockMvcRequestPostProcessors.user(userPrincipal))
+            .with(SecurityMockMvcRequestPostProcessors.csrf())
+            .param("projectID", String.valueOf(project.getProjectID())))
+        .andExpect(MockMvcResultMatchers.status().isInternalServerError())
+        .andExpect(MockMvcResultMatchers.content().string("Unexpected error"));
   }
 
   /**
@@ -191,12 +225,15 @@ class ProjectControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$").value(Matchers.hasSize(1)));
   }
 
-//  /**
-//   * JUnit test getUser method to verify authenticated
-//   * */
-//  @Test
-//  @DisplayName("getUser()")
-//  void givenUserPrincipal_whenGetUser_thenReturnUserObject() {
-//
-//  }
+  /**
+   * JUnit test getUser method with non-exist user
+   */
+  @Test
+  @DisplayName("getUser() with non-exist user")
+  void givenNonExistUser_whenGetUser_thenReturnException() {
+    when(userRepository.findById(user.getUserID())).thenReturn(Optional.empty());
+    assertThrows(IllegalArgumentException.class, () -> {
+      projectController.getUser(userPrincipal);
+    });
+  }
 }
