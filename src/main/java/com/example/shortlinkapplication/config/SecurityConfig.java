@@ -1,6 +1,5 @@
 package com.example.shortlinkapplication.config;
 
-import com.example.shortlinkapplication.repository.UserRepository;
 import com.example.shortlinkapplication.security.TokenAuthenticationFilter;
 import com.example.shortlinkapplication.security.oauth.CustomOAuth2UserService;
 import com.example.shortlinkapplication.security.oauth.HttpCookieOAuth2AuthorizationRequestRepository;
@@ -11,7 +10,6 @@ import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -26,19 +24,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-  @Autowired
-  private CustomOAuth2UserService oAuth2UserService;
-  @Autowired
-  private UserService userService;
-  @Autowired
-  @Lazy
-  private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
-  @Autowired
-  @Lazy
-  private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+  private final CustomOAuth2UserService oAuth2UserService;
+  private final UserService userService;
 
   @Autowired
-  private UserRepository userRepository;
+  public SecurityConfig(CustomOAuth2UserService oAuth2UserService, UserService userService) {
+    this.oAuth2UserService = oAuth2UserService;
+    this.userService = userService;
+  }
 
   @Bean
   public TokenAuthenticationFilter tokenAuthenticationFilter() {
@@ -63,7 +56,9 @@ public class SecurityConfig {
   }
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain securityFilterChain(HttpSecurity http,
+      OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler,
+      OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler) throws Exception {
     http
         .csrf(AbstractHttpConfigurer::disable)
         .formLogin(AbstractHttpConfigurer::disable)
@@ -86,6 +81,4 @@ public class SecurityConfig {
 
     return http.build();
   }
-
-
 }
