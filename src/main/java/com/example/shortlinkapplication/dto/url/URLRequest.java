@@ -1,8 +1,10 @@
 package com.example.shortlinkapplication.dto.url;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class URLRequest {
 
   private Integer projectID;
