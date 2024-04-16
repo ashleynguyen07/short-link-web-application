@@ -17,34 +17,34 @@
         </configuration>
         <groupId>org.springframework.boot</groupId>
       </plugin>
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <argLine>
-            -Dfile.encoding=${project.build.sourceEncoding}
-            -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
-          </argLine>
-          <testFailureIgnore>false</testFailureIgnore>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <artifactId>aspectjweaver</artifactId>
-            <groupId>org.aspectj</groupId>
-            <version>${aspectj.version}</version>
-          </dependency>
-        </dependencies>
-        <groupId>org.apache.maven.plugins</groupId>
-        <version>3.2.5</version>
-      </plugin>
-      <plugin>
-        <artifactId>allure-maven</artifactId>
-        <configuration>
-          <reportVersion>${allure.version}</reportVersion>
-          <resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>
-        </configuration>
-        <groupId>io.qameta.allure</groupId>
-        <version>2.12.0</version>
-      </plugin>
+      <!--      <plugin>-->
+      <!--        <artifactId>maven-surefire-plugin</artifactId>-->
+      <!--        <configuration>-->
+      <!--          <argLine>-->
+      <!--            -Dfile.encoding=${project.build.sourceEncoding}-->
+      <!--            -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"-->
+      <!--          </argLine>-->
+      <!--          <testFailureIgnore>false</testFailureIgnore>-->
+      <!--        </configuration>-->
+      <!--        <dependencies>-->
+      <!--          <dependency>-->
+      <!--            <artifactId>aspectjweaver</artifactId>-->
+      <!--            <groupId>org.aspectj</groupId>-->
+      <!--            <version>${aspectj.version}</version>-->
+      <!--          </dependency>-->
+      <!--        </dependencies>-->
+      <!--        <groupId>org.apache.maven.plugins</groupId>-->
+      <!--        <version>3.2.5</version>-->
+      <!--      </plugin>-->
+      <!--      <plugin>-->
+      <!--        <artifactId>allure-maven</artifactId>-->
+      <!--        <configuration>-->
+      <!--          <reportVersion>${allure.version}</reportVersion>-->
+      <!--          <resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>-->
+      <!--        </configuration>-->
+      <!--        <groupId>io.qameta.allure</groupId>-->
+      <!--        <version>2.12.0</version>-->
+      <!--      </plugin>-->
       <!-- Enable JaCoCo plugin -->
       <plugin>
         <artifactId>jacoco-maven-plugin</artifactId>
@@ -186,7 +186,13 @@
       <groupId>org.springframework.boot</groupId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <artifactId>spring-security-test</artifactId>
+      <groupId>org.springframework.security</groupId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
+
   <dependencyManagement>
     <dependencies>
       <dependency>

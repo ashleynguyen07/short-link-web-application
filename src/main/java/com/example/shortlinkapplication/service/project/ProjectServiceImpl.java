@@ -34,6 +34,7 @@ public class ProjectServiceImpl implements ProjectService {
       logger.info("Project list null");
       return new ArrayList<>();
     } else {
+      logger.info("Project service: {}", projectList);
       return projectList;
     }
   }

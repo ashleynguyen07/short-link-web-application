@@ -22,6 +22,7 @@ spring:
     url: jdbc:sqlserver://localhost:1433;databaseName=linkapplication;encrypt=true;trustServerCertificate=true
     username: sa
     password: someThingComplicated1234
+
   mail:
     host: sandbox.smtp.mailtrap.io
     port: 2525

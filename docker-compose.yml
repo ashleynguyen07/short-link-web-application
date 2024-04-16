@@ -13,6 +13,8 @@ services:
     image: link-application:v1.0
     ports:
       - "8081:8080"
+    env_file:
+      - src/main/resources/local.env
     environment:
       SPRING_DATASOURCE_URL: "jdbc:sqlserver://db:1433;databaseName=linkapplication;encrypt=true;trustServerCertificate=true"
       SPRING_DATASOURCE_USERNAME: "sa"
