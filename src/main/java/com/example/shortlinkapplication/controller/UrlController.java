@@ -7,7 +7,6 @@ import com.example.shortlinkapplication.entity.Project;
 import com.example.shortlinkapplication.entity.Url;
 import com.example.shortlinkapplication.entity.User;
 import com.example.shortlinkapplication.repository.ProjectRepository;
-import com.example.shortlinkapplication.service.project.ProjectServiceImpl;
 import com.example.shortlinkapplication.security.CurrentUser;
 import com.example.shortlinkapplication.security.UserPrincipal;
 import com.example.shortlinkapplication.service.url.UrlServiceImpl;

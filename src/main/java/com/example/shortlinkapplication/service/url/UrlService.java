@@ -1,5 +1,6 @@
 package com.example.shortlinkapplication.service.url;
 
+import com.example.shortlinkapplication.dto.url.GuestUrlRequest;
 import com.example.shortlinkapplication.dto.url.URLRequest;
 import com.example.shortlinkapplication.dto.url.UrlDeleteRequest;
 import com.example.shortlinkapplication.entity.Url;
@@ -14,6 +15,8 @@ public interface UrlService {
   List<Url> getListUrl(Integer projectID, User userID);
 
   Url convertToShortUrl(URLRequest longUrl, User userID);
+
+  Url createShortLink(GuestUrlRequest request);
 
   String getLongUrl(String shortUrl);
 

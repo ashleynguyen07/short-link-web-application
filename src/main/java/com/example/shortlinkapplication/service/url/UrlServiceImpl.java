@@ -1,13 +1,14 @@
 package com.example.shortlinkapplication.service.url;
 
+import com.example.shortlinkapplication.dto.url.GuestUrlRequest;
 import com.example.shortlinkapplication.dto.url.URLRequest;
 import com.example.shortlinkapplication.dto.url.UrlDeleteRequest;
+import com.example.shortlinkapplication.dto.url.UrlUpdateRequest;
 import com.example.shortlinkapplication.entity.Project;
 import com.example.shortlinkapplication.entity.Url;
 import com.example.shortlinkapplication.entity.User;
 import com.example.shortlinkapplication.repository.ProjectRepository;
 import com.example.shortlinkapplication.repository.URLRepository;
-import com.example.shortlinkapplication.dto.url.UrlUpdateRequest;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,20 +80,44 @@ public class UrlServiceImpl implements UrlService {
       String encodeString = baseConversion.encode(String.valueOf(entity.getId()));
       logger.info("Encode string: {}", encodeString);
 
-      String shortUrl = encodeString.substring(0, 6);
-      logger.info("Short url: {}", shortUrl);
+      StringBuilder shortUrl = new StringBuilder(encodeString.substring(0, 6));
 
-      while (urlRepository.existsByShortUrl(shortUrl)) {
+      while (urlRepository.existsByShortUrl(String.valueOf(shortUrl))) {
         encodeString = encodeString.substring(6);
-        shortUrl += encodeString.substring(0, 6);
+        shortUrl.append(encodeString, 0, 6);
       }
 
-      url.setShortUrl(shortUrl);
+      url.setShortUrl(String.valueOf(shortUrl));
       urlRepository.save(url);
 
       logger.info("Full domain: {}", shortUrl);
       return url;
     }
+  }
+
+  @Override
+  public Url createShortLink(GuestUrlRequest request) {
+    Url url = new Url();
+    url.setLongUrl(request.getLongUrl());
+    url.setCreationDate(LocalDate.now());
+    url.setProjectID(null);
+    url.setExpirationDate(LocalDate.now().plusDays(1));
+
+    var entity = urlRepository.save(url);
+
+    String encodeString = baseConversion.encode(String.valueOf(entity.getId()));
+    logger.info("Encode string: {}", encodeString);
+
+    StringBuilder shortUrl = new StringBuilder(encodeString.substring(0, 6));
+
+    while (urlRepository.existsByShortUrl(String.valueOf(shortUrl))) {
+      encodeString = encodeString.substring(6);
+      shortUrl.append(encodeString, 0, 6);
+    }
+
+    url.setShortUrl(String.valueOf(shortUrl));
+    urlRepository.save(url);
+    return url;
   }
 
   @Override
