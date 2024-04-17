@@ -23,6 +23,7 @@
           <release>7</release>
         </configuration>
         <groupId>org.apache.maven.plugins</groupId>
+        <version>3.11.0</version>
       </plugin>
 
       <!--      <plugin>-->
