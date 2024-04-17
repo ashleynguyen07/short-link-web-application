@@ -209,6 +209,13 @@
         <type>pom</type>
         <version>5.10.2</version>
       </dependency>
+      <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
+      <dependency>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        <version>3.13.0</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
