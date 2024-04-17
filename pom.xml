@@ -241,7 +241,7 @@
   <properties>
     <allure.version>2.26.0</allure.version>
     <aspectj.version>1.9.22</aspectj.version>
-    <java.version>17</java.version>
+    <java.version>21</java.version>
   </properties>
   <version>0.0.1-SNAPSHOT</version>
 </project>
