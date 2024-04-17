@@ -74,7 +74,7 @@ class LoginServiceTest {
     when(emailValidator.test(anyString())).thenReturn(true);
     when(userRepository.findByEmail(loginRequest.getEmail())).thenReturn(user);
 
-    LoginResponse loginResponse = loginService.signin(loginRequest);
+    LoginResponse loginResponse = loginService.signin(loginRequest, request);
     user.setToken(loginResponse.getToken());
 
     assertThat(loginResponse).isNotNull();
@@ -93,7 +93,7 @@ class LoginServiceTest {
     given(emailValidator.test(invalidEmail)).willReturn(false);
 
     Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-      loginService.signin(loginRequest);
+      loginService.signin(loginRequest, request);
     });
     assertEquals("Invalid email!", exception.getMessage());
   }
@@ -110,7 +110,7 @@ class LoginServiceTest {
     given(userRepository.findByEmail(nonExistEmail)).willReturn(null);
 
     Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-      loginService.signin(loginRequest);
+      loginService.signin(loginRequest, request);
     });
     assertEquals("No user registered! Please Sign Up!", exception.getMessage());
   }

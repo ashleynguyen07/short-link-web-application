@@ -48,7 +48,7 @@ class LoginControllerTest {
   private UserService userService;
   @MockBean
   private UserRepository userRepository;
-  private HttpServletRequest request;
+  private HttpServletRequest httpServletRequest;
   private HttpServletResponse response;
   private User user;
   private String token;
@@ -77,7 +77,7 @@ class LoginControllerTest {
 
     LoginResponse response = new LoginResponse(token);
 
-    when(loginService.signin(request)).thenReturn(response);
+    when(loginService.signin(request, httpServletRequest)).thenReturn(response);
 
     mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
             .with(SecurityMockMvcRequestPostProcessors.csrf())
@@ -116,7 +116,8 @@ class LoginControllerTest {
     when(userDetails.getUsername()).thenReturn("test@example.com");
     when(userDetails.getAuthorities()).thenReturn(Collections.emptyList());
 
-    when(loginService.confirmToken(code, request, response)).thenReturn(user.getUserID());
+    when(loginService.confirmToken(code, httpServletRequest, response)).thenReturn(
+        user.getUserID());
     when(userService.loadUserById(anyInt())).thenReturn(userDetails);
     when(tokenProvider.createToken(
         Mockito.any(UsernamePasswordAuthenticationToken.class))).thenReturn(token);
