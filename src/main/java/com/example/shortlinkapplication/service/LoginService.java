@@ -36,7 +36,7 @@ public class LoginService {
   }
 
   // Regex to validate email - using test() method in EmailValidator
-  public LoginResponse signin(LoginRequest loginRequest) {
+  public LoginResponse signin(LoginRequest loginRequest, HttpServletRequest request) {
     boolean isValidEmail = emailValidator.test(loginRequest.getEmail());
     if (!isValidEmail) {
       throw new IllegalArgumentException("Invalid email!");
@@ -46,7 +46,12 @@ public class LoginService {
       throw new IllegalArgumentException("No user registered! Please Sign Up!");
     }
     LoginResponse loginResponse = createToken(user);
-    String link = "http://localhost:8080/auth/confirm?token=" + loginResponse.getToken();
+    String serverUrl = request.getScheme() + "://" + request.getServerName();
+    if (("http".equals(request.getScheme()) && request.getServerPort() != 80) || (
+        "https".equals(request.getScheme()) && request.getServerPort() != 443)) {
+      serverUrl += ":" + request.getServerPort();
+    }
+    String link = serverUrl + "/auth/confirm?token=" + loginResponse.getToken();
     emailSender.send(
         loginRequest.getEmail(),
         buildEmail(link));

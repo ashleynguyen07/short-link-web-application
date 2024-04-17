@@ -32,8 +32,9 @@ public class LoginController {
   private final UserService userService;
 
   @PostMapping("/login")
-  public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-    return ResponseEntity.ok(loginService.signin(loginRequest));
+  public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest,
+      HttpServletRequest request) {
+    return ResponseEntity.ok(loginService.signin(loginRequest, request));
   }
 
   @GetMapping("/logout")
