@@ -10,17 +10,15 @@ services:
       - "1433:1433"
     volumes:
       - db-data:var/opt/mssql
-  link-application:
-    image: link-application:v1.0
+  short-link-application:
+    image: ashleynguyen07/short-link-application:v1.0.0
     ports:
-      - "8081:8080"
-    env_file:
-      - src/main/resources/local.env
+      - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:sqlserver://db:1433;databaseName=linkapplication;encrypt=true;trustServerCertificate=true"
+      SPRING_DATASOURCE_URL: "jdbc:sqlserver://mssql-container:1433;databaseName=linkapplication;encrypt=true;trustServerCertificate=true"
       SPRING_DATASOURCE_USERNAME: "sa"
       SPRING_DATASOURCE_PASSWORD: "someThingComplicated1234"
     depends_on:
-      - db
+      - mssql-container
 volumes:
   db-data:
